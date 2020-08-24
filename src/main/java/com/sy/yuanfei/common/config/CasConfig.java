@@ -50,6 +50,7 @@ public class CasConfig {
         //客户端回调地址
         casClient.setName(clientName);
         casClient.setCallbackUrl(projectUrl + "/callback?client_name=" + clientName);
+        System.out.println(casClient.toString());
         return casClient;
     }
 

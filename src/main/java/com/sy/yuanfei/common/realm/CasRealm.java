@@ -7,6 +7,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -15,7 +16,12 @@ import org.pac4j.core.profile.CommonProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CasRealm extends Pac4jRealm {
 
@@ -49,16 +55,49 @@ public class CasRealm extends Pac4jRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 
-        System.out.println("======>doGetAuthorizationInfo");
-        SimpleAuthorizationInfo authInfo = new SimpleAuthorizationInfo();
-        authInfo.addStringPermission("user:select");
-        Pac4jPrincipal principal = (Pac4jPrincipal)this.getAvailablePrincipal(principals);
-        System.out.println("----------------------"+principal.getProfile().getId());
-        try {
-            System.out.println(dataSource.getConnection());
-        }catch (Exception e){
-            e.printStackTrace();
+        System.out.println("2.doGetAuthorizationInfo.........");
+        if (principals == null) {
+            throw new AuthorizationException("PrincipalCollection method argument cannot be null.");
+        } else {
+            String username = (String) this.getAvailablePrincipal(principals);
+            Connection conn = null;
+            Set<String> roleNames = new HashSet<>();
+            Set permissions = new HashSet();
+
+            try {
+                //1.先查角色
+                conn = this.dataSource.getConnection();
+                PreparedStatement statement = conn.prepareStatement("SELECT rolecode FROM au_role WHERE id = (SELECT roleid FROM au_user WHERE username = ?)");
+                statement.setString(1, username);
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    String rolename = resultSet.getString("rolecode");
+                    roleNames.add(rolename);
+                }
+
+                //2.再查权限
+                statement = conn.prepareStatement("SELECT funcUrl FROM au_function WHERE id " +
+                        "IN(SELECT functionid FROM au_authority WHERE roleid =(" +
+                        "SELECT roleid FROM au_user WHERE username = ?))");
+                statement.setString(1, username);
+                resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    String permission = resultSet.getString("funcUrl");
+                    System.out.println(permission);
+                    permissions.add(permission);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    conn.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roleNames);
+            info.setStringPermissions(permissions);
+            return info;
         }
-        return authInfo;
     }
 }

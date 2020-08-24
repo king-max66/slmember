@@ -59,7 +59,6 @@ public class ShiroConfig {
                                                          @Autowired Config exPac4jConfig,
                                                          @Autowired Pac4jSubjectFactory pac4jSubjectFactory,
                                                          @Autowired CasRealm casRealm) {
-        System.out.println( "shiro++++++++++++++++++++++++++" );
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         
         //1.设置认证管理器使用的Realm和认证交由CAS处理
