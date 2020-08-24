@@ -1,6 +1,7 @@
 package com.sy.yuanfei.common.realm;
 
 
+import io.buji.pac4j.subject.Pac4jPrincipal;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -25,6 +26,11 @@ public class MyJdbcRealm1 extends JdbcRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+
+
+
+
+
 
         System.out.println("1.doGetAuthenticationInfo.........");
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
