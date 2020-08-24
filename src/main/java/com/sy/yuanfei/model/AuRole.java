@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 角色表(AuRole)实体类
@@ -32,7 +33,7 @@ public class AuRole implements Serializable {
     /**
     * 创建日期
     */
-    private Object createdate;
+    private Date createdate;
     /**
     * 是否启用（0、未启用1、启用）
     */
@@ -43,52 +44,5 @@ public class AuRole implements Serializable {
     private String createby;
 
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getRolecode() {
-        return rolecode;
-    }
-
-    public void setRolecode(String rolecode) {
-        this.rolecode = rolecode;
-    }
-
-    public String getRolename() {
-        return rolename;
-    }
-
-    public void setRolename(String rolename) {
-        this.rolename = rolename;
-    }
-
-    public Object getCreatedate() {
-        return createdate;
-    }
-
-    public void setCreatedate(Object createdate) {
-        this.createdate = createdate;
-    }
-
-    public Integer getIsstart() {
-        return isstart;
-    }
-
-    public void setIsstart(Integer isstart) {
-        this.isstart = isstart;
-    }
-
-    public String getCreateby() {
-        return createby;
-    }
-
-    public void setCreateby(String createby) {
-        this.createby = createby;
-    }
 
 }
