@@ -1,7 +1,4 @@
 package com.sy.yuanfei.common.config;
-
-
-
 import io.buji.pac4j.context.ShiroSessionStore;
 import org.pac4j.cas.client.CasClient;
 import org.pac4j.cas.config.CasConfiguration;
