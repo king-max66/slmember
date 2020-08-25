@@ -32,7 +32,7 @@
 
 </body>
 
-<script src="/lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script src="/lib/layui-v2.5.5/layui.js" ></script>
 <script>
     layui.use(['form', 'table','jquery'], function () {
         var $ = layui.jquery,
@@ -49,16 +49,16 @@
                 icon: 'layui-icon-tips'
             }]
             , request: {
-            pageName: 'pageNum' //页码的参数名称，默认：page
+            pageName: 'pageNow' //页码的参数名称，默认：page
                 ,
                 limitName: 'pageSize' //每页数据量的参数名，默认：limit
-        },
+            },
             cols: [[
-                {type: "checkbox", width: 50},
-                {field: 'rolecode', width: 100, title: '角色标号', sort: true},
-                {field: 'rolename', width: 100, title: '角色名称'},
-                {field: 'createby', width: 100, title: '创建人', sort: true},
-                {field: 'isstart', width: 100, title: '状态(启用/禁用)'},
+                {type: "checkbox", width: 100},
+                {field: 'rolecode', width: 200, title: '角色标号', sort: true},
+                {field: 'rolename', width: 200, title: '角色名称'},
+                {field: 'createby', width: 200, title: '创建人', sort: true},
+                {field: 'isstart', width: 200, title: '状态(启用/禁用)'},
                 {field: 'createdate', title: '最后修改时间', minWidth: 150},
             ]],
             limits: [1, 2, 3, 4, 5, 6],
@@ -67,45 +67,63 @@
             skin: 'line'
         });
 
-        $(document).on("click","#add",function () {
-            layer.open({
-                type: 1
-                , title: false //不显示标题栏
-                , closeBtn: false
-                , area: '300px;'
-                , shade: 0.8
-                , id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                , btn: ['添加', '取消']
-                , btnAlign: 'c'
-                , moveType: 1 //拖拽模式，0或者1
-                , content: '<div style="height: 500px;width: 400px">\n' +
-                    '    <div style="height: 100px;width: 100px">\n' +
-                    '        <span>角色编号：</span><input type="text">\n' +
-                    '    </div>\n' +
-                    '    <div style="height: 100px;width: 100px">\n' +
-                    '        <span>角色名称：</span><input type="text">\n' +
-                    '    </div>\n' +
-                    '    <div style="height: 100px;width: 100px">\n' +
-                    '        <span>角色状态：</span><input type="checkbox">启用 &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox"> 禁用\n' +
-                    '    </div>\n' +
-                    '    <button>保存</button> <button>关闭</button>\n' +
-                    '</div>'
-                , success: function (layero) {
-                    var btn = layero.find('.layui-layer-btn');
-                    btn.find('.layui-layer-btn0').attr({
-                        href: 'http://www.layui.com/'
-                        , target: '_blank'
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加用户',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: '/page/table/add.html',
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'delete') {  // 监听删除操作
+                var checkStatus = table.checkStatus('currentTableId')
+                    , data = checkStatus.data;
+                layer.alert(JSON.stringify(data));
+            }else {
+                $(document).on("click","#add",function () {
+                    layer.open({
+                        type: 1
+                        , title: false //不显示标题栏
+                        , closeBtn: false
+                        , area: '300px;'
+                        , shade: 0.8
+                        , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                        , btn: ['添加', '取消']
+                        , btnAlign: 'c'
+                        , moveType: 1 //拖拽模式，0或者1
+                        , content: '<div style="height: 500px;width: 400px">\n' +
+                            '    <div style="height: 100px;width: 100px">\n' +
+                            '        <span>角色编号：</span><input type="text">\n' +
+                            '    </div>\n' +
+                            '    <div style="height: 100px;width: 100px">\n' +
+                            '        <span>角色名称：</span><input type="text">\n' +
+                            '    </div>\n' +
+                            '    <div style="height: 100px;width: 100px">\n' +
+                            '        <span>角色状态：</span><input type="checkbox">启用 &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox"> 禁用\n' +
+                            '    </div>\n' +
+                            '    <button>保存</button> <button>关闭</button>\n' +
+                            '</div>'
+                        , success: function (layero) {
+                            var btn = layero.find('.layui-layer-btn');
+                            btn.find('.layui-layer-btn0').attr({
+                                href: 'http://www.layui.com/'
+                                , target: '_blank'
+                            });
+                        }
                     });
-                }
-            });
-        })
+                })
+            }
+        });
 
-
-/*
-
-        /!**
+        /**
          * toolbar监听事件
-         *!/
+         */
         table.on('toolbar(currentTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
@@ -131,7 +149,6 @@
         table.on('checkbox(currentTableFilter)', function (obj) {
             console.log(obj)
         });
-*/
 
        /* table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;

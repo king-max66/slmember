@@ -2,6 +2,7 @@ package com.sy.yuanfei;
 
 import com.sy.yuanfei.common.config.CasConfig;
 import com.sy.yuanfei.common.config.ShiroConfig;
+import com.sy.yuanfei.common.interceptor.InterceptorRules;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -9,7 +10,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@Import(value = {ShiroConfig.class, CasConfig.class})
+@Import(value = {ShiroConfig.class, CasConfig.class, InterceptorRules.class})
 @EnableJpaRepositories(basePackages = {"com.sy.yuanfei.mapper"})
 //持久化类扫描
 @EntityScan(basePackages = {"com.sy.yuanfei.model"})

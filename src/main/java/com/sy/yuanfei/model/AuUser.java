@@ -1,5 +1,6 @@
 package com.sy.yuanfei.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,7 @@ public class AuUser implements Serializable {
     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     /**
     * 登录账号
     */
@@ -112,10 +113,12 @@ typeCode =’CARD_TYPE’的 valueName
     /**
     * 最新更新时间
     */
+    @JsonFormat(pattern = "yyyy-MM-hh HH:mm:ss")
     private Date lastupdatetime;
     /**
     * 最后登录时间
     */
+    @JsonFormat(pattern = "yyyy-MM-hh HH:mm:ss")
     private Date lastlogintime;
     /**
     * 开户卡号
