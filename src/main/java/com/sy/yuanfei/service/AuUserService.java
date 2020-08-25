@@ -4,5 +4,5 @@ import com.sy.yuanfei.model.AuUser;
 
 public interface AuUserService {
 
-    AuUser login(String username,String password)throws  Exception;
+    AuUser login(String username)throws  Exception;
 }

@@ -55,13 +55,6 @@ public class CasRealm extends Pac4jRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 
-        SimpleAuthorizationInfo authInfo = new SimpleAuthorizationInfo();
-        authInfo.addStringPermission("user:select");
-        Pac4jPrincipal principal = (Pac4jPrincipal)this.getAvailablePrincipal(principals);
-        System.out.println("----------------------"+principal.getProfile().getId());
-
-
-        System.out.println("2.doGetAuthorizationInfo.........");
         if (principals == null) {
             throw new AuthorizationException("PrincipalCollection method argument cannot be null.");
         } else {

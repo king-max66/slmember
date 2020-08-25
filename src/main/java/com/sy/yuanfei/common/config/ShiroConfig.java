@@ -91,7 +91,7 @@ public class ShiroConfig {
         //定义三个CAS过滤器对特定路径的过滤
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         //访问什么资源都需cas认证
-        filterChainDefinitionMap.put("/logout", "logoutFilter");//CAS登出
+        filterChainDefinitionMap.put("/logout.do", "logoutFilter");//CAS登出
         filterChainDefinitionMap.put("/callback", "callbackFilter");//CAS认证成功,回调原访问路径
         filterChainDefinitionMap.put("/**", "securityFilter");//CAS认证
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

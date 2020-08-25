@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @RestController
@@ -19,8 +20,8 @@ public class AuUserController {
     private AuUserService auUserService;
 
     @RequestMapping("/login.do")
-    public Result login(String username, String password, String captcha, HttpSession session)throws Exception{
-        AuUser login = auUserService.login(username, password);
+    public Result login(String username, String captcha, HttpSession session)throws Exception{
+        AuUser login = auUserService.login(username);
         String text = (String)session.getAttribute("captcha");
         Result result= new Result();
         if(!text.toLowerCase().equals(captcha)){
@@ -44,16 +45,19 @@ public class AuUserController {
      * @return
      */
     @RequestMapping("/session.do")
-    public Result findSessionUser(HttpSession session){
+    public Result findSessionUser(HttpSession session, HttpServletRequest request)throws Exception{
         Result baseResult = new Result();
-        AuUser sessionUser = (AuUser) session.getAttribute("sessionUser");
-        if(sessionUser==null){
+        String remoteUser = request.getRemoteUser();
+        AuUser login = auUserService.login(remoteUser);
+
+        if(login==null){
             baseResult.setMsg("请登录");
             baseResult.setCode(Result.CODE_FAILED);
         }else{
             baseResult.setMsg(Result.MSG_SUCCESS);
             baseResult.setCode(Result.CODE_SUCCESS);
-            baseResult.setData(sessionUser);
+            session.setAttribute("sessionUser",login);
+            baseResult.setData(login);
         }
         return baseResult;
     }

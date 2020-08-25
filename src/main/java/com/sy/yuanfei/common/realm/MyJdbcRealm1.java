@@ -28,10 +28,6 @@ public class MyJdbcRealm1 extends JdbcRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
 
 
-
-
-
-
         System.out.println("1.doGetAuthenticationInfo.........");
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
         String username = upToken.getUsername();

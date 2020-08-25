@@ -16,7 +16,7 @@
             <div class="layui-btn-container">
                 <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
                 <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="modify"> 修改 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-modify-btn" lay-event="modify"> 修改 </button>
             </div>
         </script>
 
@@ -29,6 +29,8 @@
 
     </div>
 </div>
+
+
 </body>
 
 <script src="/lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
@@ -48,38 +50,53 @@
                 icon: 'layui-icon-tips'
             }],
             cols: [[
-                {type: "checkbox", width: 50,title:"选择"},
+                {type: "checkbox", width: 50},
                 {field: 'rolecode', width: 100, title: '角色标号', sort: true},
                 {field: 'rolename', width: 100, title: '角色名称'},
                 {field: 'createby', width: 100, title: '创建人', sort: true},
                 {field: 'isstart', width: 100, title: '状态(启用/禁用)'},
                 {field: 'createdate', title: '最后修改时间', minWidth: 150},
             ]],
-            limits: [10, 15, 20, 25, 50, 100],
+            limits: [1, 2, 20, 25, 50, 100],
             limit: 15,
             page: true,
             skin: 'line'
         });
 
-        // 监听搜索操作
-        form.on('submit(data-search-btn)', function (data) {
-            var result = JSON.stringify(data.field);
-            layer.alert(result, {
-                title: '最终的搜索信息'
+        $(document).on("click",".data-add-btn",function () {
+            layer.open({
+                type: 1
+                , title: false //不显示标题栏
+                , closeBtn: false
+                , area: '300px;'
+                , shade: 0.8
+                , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                , btn: ['火速围观', '残忍拒绝']
+                , btnAlign: 'c'
+                , moveType: 1 //拖拽模式，0或者1
+                , content: '<div style="height: 500px;width: 400px">\n' +
+                    '    <div style="height: 100px;width: 100px">\n' +
+                    '        <span>角色编号：</span><input type="text">\n' +
+                    '    </div>\n' +
+                    '    <div style="height: 100px;width: 100px">\n' +
+                    '        <span>角色名称：</span><input type="text">\n' +
+                    '    </div>\n' +
+                    '    <div style="height: 100px;width: 100px">\n' +
+                    '        <span>角色状态：</span><input type="checkbox">启用 &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox"> 禁用\n' +
+                    '    </div>\n' +
+                    '    <button>保存</button> <button>关闭</button>\n' +
+                    '</div>'
+                , success: function (layero) {
+                    var btn = layero.find('.layui-layer-btn');
+                    btn.find('.layui-layer-btn0').attr({
+                        href: 'http://www.layui.com/'
+                        , target: '_blank'
+                    });
+                }
             });
+        })
 
-            //执行搜索重载
-            table.reload('currentTableId', {
-                page: {
-                    curr: 1
-                }
-                , where: {
-                    searchParams: result
-                }
-            }, 'data');
 
-            return false;
-        });
 
         /**
          * toolbar监听事件
@@ -93,7 +110,7 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: '../page/table/add.html',
+                    content: '/page/table/add.html',
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -110,7 +127,7 @@
             console.log(obj)
         });
 
-        table.on('tool(currentTableFilter)', function (obj) {
+       /* table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
 
@@ -121,7 +138,7 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: '../page/table/edit.html',
+                    content: '/page/table/edit.html',
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -133,7 +150,7 @@
                     layer.close(index);
                 });
             }
-        });
+        });*/
 
     });
 </script>

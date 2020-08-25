@@ -14,10 +14,9 @@ public class AuUserServiceImpl implements AuUserService {
     private AuUserMapper auUserMapper;
 
     @Override
-    public AuUser login(String username, String password) throws Exception {
+    public AuUser login(String username) throws Exception {
         AuUser auUser= new AuUser();
         auUser.setUsername(username);
-        auUser.setPassword(password);
         Example example= Example.of(auUser);
         List<AuUser> list = auUserMapper.findAll(example);
         return list.get(0);
