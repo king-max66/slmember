@@ -11,7 +11,6 @@ public class CORSInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //充许客端JS跨域请求
         response.setHeader("X-Frame-Options", "SAMEORIGIN");
-        System.out.println("..................................");
         response.setHeader("Access-Control-Allow-Origin", "http://192.168.100.103:8080");
         response.setHeader("Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, DELETE, OPTIONS");
         response.setHeader("Access-Control-Max-Age", "3600");

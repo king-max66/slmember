@@ -22,6 +22,7 @@ public class AuRoleController {
 
     @RequestMapping("/findAll.do")
     public Result findAll(Pageable pageable,Integer pageSize,Integer pageNow)throws Exception{
+        System.out.println("findAll.do---------------------");
         Page<AuRole> list1 = auRoleService.findAll(pageable);
         List<AuRole> list = list1.getContent();
         Pageable of = PageRequest.of(pageNow-1, pageSize);
@@ -37,6 +38,15 @@ public class AuRoleController {
             result.setCode(Result.CODE_FAILED);
             result.setMsg(Result.MSG_FAILED);
         }
+        return result;
+    }
+
+    @RequestMapping("/removeById.do")
+    public Result remove(int id)throws Exception{
+        Result result= new Result();
+        auRoleService.removeById(id);
+        result.setCode(Result.CODE_SUCCESS);
+        result.setMsg(Result.MSG_SUCCESS);
         return result;
     }
 }

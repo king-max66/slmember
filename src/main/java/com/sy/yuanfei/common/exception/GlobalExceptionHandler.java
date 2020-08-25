@@ -29,6 +29,8 @@ public class GlobalExceptionHandler {
             baseResult.setMsg("你没有权限，请联系管理员！");
             return baseResult;
         }
+
+        e.printStackTrace();
         baseResult.setCode(Result.CODE_FAILED);
         baseResult.setMsg(Result.MSG_FAILED);
         return baseResult;

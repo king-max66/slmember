@@ -9,4 +9,6 @@ import java.util.List;
 public interface AuRoleService {
 
     Page<AuRole> findAll(Pageable pageable)throws  Exception;
+
+    void removeById(int id)throws Exception;
 }
