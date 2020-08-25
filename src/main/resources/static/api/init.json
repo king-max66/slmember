@@ -219,7 +219,7 @@
             },
             {
               "title": "权限管理",
-              "href": "a3.html",
+              "href": "/html/backstage/author.html",
               "icon": "fa fa-tachometer",
               "target": "_self"
             },
@@ -445,7 +445,7 @@
         },
         {
           "title": "失效菜单",
-          "href": "/page/error.html",
+          "href": "/html/page/menu.html",
           "icon": "fa fa-superpowers",
           "target": "_self"
         }
