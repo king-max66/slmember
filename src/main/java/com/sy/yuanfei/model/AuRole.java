@@ -1,5 +1,6 @@
 package com.sy.yuanfei.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,7 @@ public class AuRole implements Serializable {
     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     /**
     * 角色编码
     */
@@ -38,6 +39,7 @@ public class AuRole implements Serializable {
     /**
     * 创建日期
     */
+    @JsonFormat(pattern = "yyyy-MM-hh HH:mm:ss")
     private Date createdate;
     /**
     * 是否启用（0、未启用1、启用）

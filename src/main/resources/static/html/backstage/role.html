@@ -7,23 +7,27 @@
     <link rel="stylesheet" href="/css/public.css" media="all">
 </head>
 <body>
-
 <div class="layuimini-container">
     <div class="layuimini-main">
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add" id="add"> 添加 </button>
+                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add" > 添加 </button>
             </div>
         </script>
 
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
     </div>
+
+
 </div>
 
 
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <input type="button" class="layui-btn layui-btn-xs" lay-event="edit" value="编辑">
+    <input type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" value="删除">
 </script>
+
 
 </body>
 
@@ -52,7 +56,7 @@
             },
             cols: [[
                 {type: "checkbox", width: 100},
-                {field: 'id', width: 200, title: 'ID' ,hidden:true},
+                {field: 'id',  title: 'ID' ,hide:true},
                 {field: 'rolecode', width: 200, title: '角色标号', sort: true},
                 {field: 'rolename', width: 200, title: '角色名称'},
                 {field: 'createby', width: 200, title: '创建人', sort: true},
@@ -60,7 +64,7 @@
                 {field: 'createdate', title: '最后修改时间', minWidth: 150},
                 {fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
             ]],
-            limits: [1, 2, 3, 4, 5],
+            limits: [1, 2, 3, 4, 5, 6],
             limit: 5,
             page: true,
             skin: 'line'
@@ -79,56 +83,78 @@
                     , btn: ['添加', '取消']
                     , btnAlign: 'c'
                     , moveType: 1 //拖拽模式，0或者1
-                    , content: '<div class="layui-form layuimini-form">' +
-                        '<div class="layui-form layuimini-form">\n' +
+                    , content: '<from class="layui-form layuimini-form">' +
+                        '<from class="layui-form layuimini-form">\n' +
                         '    <div class="layui-form-item">\n' +
                         '    <label class="layui-form-label required">角色编号</label>\n' +
                         '    <div class="layui-input-block">\n' +
-                        '        <input type="text" name="username" lay-verify="required" lay-reqtext="不能为空" placeholder="请输入角色编号" value="" class="layui-input">\n' +
+                        '        <input type="text" name="rolecode" lay-verify="required" lay-reqtext="不能为空" placeholder="请输入角色编号" value="" class="layui-input">\n' +
                         '    </div>\n' +
                         '</div>\n' +
                         '    <div class="layui-form-item">\n' +
                         '        <label class="layui-form-label required">角色名称</label>\n' +
                         '        <div class="layui-input-block">\n' +
-                        '            <input type="text" name="username" lay-verify="required" lay-reqtext="不能为空" placeholder="请输入角色名称" value="" class="layui-input">\n' +
+                        '            <input type="text" name="rolename" lay-verify="required" lay-reqtext="不能为空" placeholder="请输入角色名称" value="" class="layui-input">\n' +
                         '        </div>\n' +
                         '    </div>\n' +
-                        '<div class="layui-form-item">\n' +
-                        '            <label class="layui-form-label required">角色状态</label>\n' +
-                        '    <div class="layui-input-block">\n' +
-                        '        <input type="radio" name="sex" value="男" title="男" checked="">\n' +
-                        '        <input type="radio" name="sex" value="女" title="女">\n' +
-                        '    </div>\n' +
-                        '   </div></div>'
+                        '   <div class="layui-form-item">\n' +
+                        '                <label class="layui-form-label">单选框</label>\n' +
+                        '                <div class="layui-input-block">\n' +
+                        '                    <input type="radio" name="use" value="启用" title="启用" checked="">\n' +
+                        '                    <input type="radio" name="use" value="禁用" title="启用">\n' +
+                        '                </div>\n' +
+                        '            </div> ' +
+                        '</from>'
                     , success: function (layero) {
-                        var btn = layero.find('.layui-layer-btn');
-                        btn.find('.layui-layer-btn0').attr({
-                            href: 'http://www.layui.com/'
-                            , target: '_blank'
-                        });
-                    }
-                });
+                        form.render('radio');
 
-            } else if (obj.event === 'del') {  // 监听删除操作
-                $.ajax({
-                    url:"/auRole/removeById.do"
-                    ,dataType:"json"
-                    ,type:"get"
-                    ,data:{"id":data.id}
-                    ,success:function (rec) {
-                        if(rec.code==0){
-                            layer.msg("删除成功....");
-                            setTimeout(function () {
-                                location.href="/html/backstage/role.html"
-                            },2000)
-                        }else {
-                            layer.msg("删除失败....");
-                            setTimeout(function () {
-                                location.href="/html/backstage/role.html"
-                            },2000)
+
+                        /* var btn = layero.find('.layui-layer-btn');
+                        btn.find('.layui-layer-btn0').attr({
+                            href: '/auRole/add.do'
+                            , target: '_blank'
+                        });*/
+                    },yes: function (index, layero) {
+                        var rolecode=$("input[name=rolecode]").val();
+                        var rolename=$("input[name=rolename]").val();
+                        var isstar=$("input[name=use]").val();
+                        if(rolecode==null || rolecode==""){
+                            layer.msg("角色编号不能为空")
+                        }else if(rolename==null || rolename==""){
+                            layer.msg("角色名称不能为空")
+                        }else if (isstar==null || isstar==""){
+                            layer.msg("状态没有选择")
+                        } else {
+                            var isstart=1;
+                            if (isstar=="禁用"){
+                                isstart=0;
+                            }
+                            $.ajax({
+                                    url: "/auRole/add.do"
+                                    , dataType: "json"
+                                    , type: "get"
+                                    , data: {"rolecode":rolecode,"rolename":rolename,"isstart":isstart}
+                                    , success: function (rec) {
+                                    if (rec.code == 0) {
+                                        layer.msg("添加角色成功...");
+                                        setTimeout(function () {
+                                            location.href="/html/backstage/role.html"
+                                        },2000)
+                                    } else {
+                                        layer.msg("添加角色失败");
+                                        setTimeout(function () {
+                                            location.href="/html/backstage/role.html"
+                                        },2000)
+                                    }
+                                }
+
+                            })
+
                         }
+
                     }
                 })
+
             }
         });
 
@@ -138,30 +164,84 @@
             console.log(obj)
         });
 
-       /* table.on('tool(currentTableFilter)', function (obj) {
+        table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
-            if (obj.event === 'edit') {
+            if (obj.event === 'del') {
 
-                var index = layer.open({
-                    title: '编辑用户',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '/page/table/edit.html',
+                layer.confirm('确定删除该角色吗？', {
+                    btn: ['确定', '取消'] //可以无限个按钮
+                }, function(index, layero){
+                    $.ajax({
+                        url:"/auRole/removeById.do"
+                        ,dataType:"json"
+                        ,type:"get"
+                        ,data:{"id":data.id}
+                        ,success:function (rec) {
+                            if(rec.code==0){
+                                layer.msg("删除成功....");
+                                setTimeout(function () {
+                                    location.href="/html/backstage/role.html"
+                                },2000)
+                            }else {
+                                layer.msg("删除失败....");
+                                setTimeout(function () {
+                                    location.href="/html/backstage/role.html"
+                                },2000)
+                            }
+                        }
+                    })
+                }, function(index){
+
                 });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-                return false;
-            } else if (obj.event === 'delete') {
-                layer.confirm('真的删除行么', function (index) {
-                    obj.del();
-                    layer.close(index);
-                });
+
+            } else if (obj.event === 'edit') {
+                layer.open({
+                    type: 1
+                    , title: "角色修改" //不显示标题栏
+                    , closeBtn: false
+                    , area: '[800px,700px]'
+                    , shade: 0.8
+                    , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                    , btn: ['确认修改', '取消']
+                    , btnAlign: 'c'
+                    , moveType: 1 //拖拽模式，0或者1
+                    , content: '<from class="layui-form layuimini-form">' +
+                        '<from class="layui-form layuimini-form">\n' +
+                        '    <div class="layui-form-item">\n' +
+                        '    <label class="layui-form-label required">角色编号</label>\n' +
+                        '    <div class="layui-input-block">\n' +
+                        '        <input type="text" name="rolecode" lay-verify="required" lay-reqtext="不能为空" placeholder="请输入角色编号" value="" class="layui-input">\n' +
+                        '    </div>\n' +
+                        '</div>\n' +
+                        '    <div class="layui-form-item">\n' +
+                        '        <label class="layui-form-label required">角色名称</label>\n' +
+                        '        <div class="layui-input-block">\n' +
+                        '            <input type="text" name="rolename" lay-verify="required" lay-reqtext="不能为空" placeholder="请输入角色名称" value="" class="layui-input">\n' +
+                        '        </div>\n' +
+                        '    </div>\n' +
+                        '   <div class="layui-form-item">\n' +
+                        '                <label class="layui-form-label">单选框</label>\n' +
+                        '                <div class="layui-input-block">\n' +
+                        '                    <input type="radio" name="use" value="启用" title="启用" >\n' +
+                        '                    <input type="radio" name="use" value="禁用" title="禁用">\n' +
+                        '                </div>\n' +
+                        '            </div> ' +
+                        '</from>'
+                    , success: function (layero) {
+                        form.render('radio');
+                       $("input[name=rolecode]").val(data.rolecode);
+                        $("input[name=rolename]").val(data.rolename);
+                        var isstart=(data.isstart==1?"启用":"禁用");
+                        $("input[name=use]").each(function () {
+                            if ($(this).val()==isstart){
+                                alert($(this).val()+isstart);
+                                $(this).prop("checked",'true')
+                            }
+                        })
+                    }
+                })
             }
-        });*/
+        });
 
 
     });

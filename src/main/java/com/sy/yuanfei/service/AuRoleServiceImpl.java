@@ -28,4 +28,11 @@ public class AuRoleServiceImpl implements AuRoleService {
     public void removeById(int id) throws Exception {
         auRoleMapper.deleteById(id);
     }
+
+    @Override
+    @Transactional(isolation = Isolation.DEFAULT,propagation = Propagation.REQUIRED)
+    public AuRole addRole(AuRole auRole) throws Exception {
+        AuRole save = auRoleMapper.save(auRole);
+        return save;
+    }
 }
