@@ -1,5 +1,10 @@
 package com.sy.yuanfei.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -8,12 +13,19 @@ import java.io.Serializable;
  * @author makejava
  * @since 2020-08-24 11:59:47
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "DATA_DICTIONARY")
 public class DataDictionary implements Serializable {
     private static final long serialVersionUID = 795920563370792390L;
     /**
     * 主键ID
     */
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     /**
     * 类型编码
     */
@@ -32,44 +44,6 @@ public class DataDictionary implements Serializable {
     private String valuename;
 
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTypecode() {
-        return typecode;
-    }
-
-    public void setTypecode(String typecode) {
-        this.typecode = typecode;
-    }
-
-    public String getTypename() {
-        return typename;
-    }
-
-    public void setTypename(String typename) {
-        this.typename = typename;
-    }
-
-    public Integer getValueid() {
-        return valueid;
-    }
-
-    public void setValueid(Integer valueid) {
-        this.valueid = valueid;
-    }
-
-    public String getValuename() {
-        return valuename;
-    }
-
-    public void setValuename(String valuename) {
-        this.valuename = valuename;
-    }
 
 }

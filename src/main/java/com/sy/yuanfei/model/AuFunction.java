@@ -27,7 +27,7 @@ public class AuFunction implements Serializable {
     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     /**
     * 功能编码
     */
@@ -48,52 +48,5 @@ public class AuFunction implements Serializable {
     private Date creationtime;
 
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFunccode() {
-        return funccode;
-    }
-
-    public void setFunccode(String funccode) {
-        this.funccode = funccode;
-    }
-
-    public String getFuncname() {
-        return funcname;
-    }
-
-    public void setFuncname(String funcname) {
-        this.funcname = funcname;
-    }
-
-    public String getFuncurl() {
-        return funcurl;
-    }
-
-    public void setFuncurl(String funcurl) {
-        this.funcurl = funcurl;
-    }
-
-    public Long getParentid() {
-        return parentid;
-    }
-
-    public void setParentid(Long parentid) {
-        this.parentid = parentid;
-    }
-
-    public Date getCreationtime() {
-        return creationtime;
-    }
-
-    public void setCreationtime(Date creationtime) {
-        this.creationtime = creationtime;
-    }
 
 }

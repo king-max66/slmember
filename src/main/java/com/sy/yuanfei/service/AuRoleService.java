@@ -12,4 +12,6 @@ public interface AuRoleService {
     void removeById(int id)throws Exception;
 
     AuRole addRole(AuRole auRole)throws Exception;
+
+    AuRole findById(int id)throws Exception;
 }

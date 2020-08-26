@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional(readOnly = true)
 public class AuRoleServiceImpl implements AuRoleService {
@@ -34,5 +36,14 @@ public class AuRoleServiceImpl implements AuRoleService {
     public AuRole addRole(AuRole auRole) throws Exception {
         AuRole save = auRoleMapper.save(auRole);
         return save;
+    }
+
+    @Override
+    public AuRole findById(int id) throws Exception {
+        Optional<AuRole> byId = auRoleMapper.findById(id);
+        System.out.println(id+"========================");
+        AuRole auRole = byId.get();
+        System.out.println(auRole+"---------------"+id);
+        return auRole;
     }
 }

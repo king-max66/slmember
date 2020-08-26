@@ -12,9 +12,9 @@ import org.pac4j.core.config.Config;
 @Configuration
 public class CasConfig {
 
-    @Value(value = "http://192.168.100.104:8080/cas")
+    @Value(value = "http://192.168.100.136:8080/cas")
     private String casServerUrl;
-    @Value(value = "http://192.168.100.104:8888")
+    @Value(value = "http://192.168.100.136:8888")
     private String projectUrl;
     @Value(value = "casClient")
     private String clientName;

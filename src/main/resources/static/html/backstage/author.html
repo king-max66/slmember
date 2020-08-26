@@ -17,7 +17,12 @@
 
 <div class="layuimini-container">
     <div class="layuimini-main">
+        <div>
+            <div class="layui-btn-group">
+                <button class="layui-btn " id="btn-fold" lay-event="edit">添加权限</button>
+            </div>
             <table id="munu-table" class="layui-table" lay-filter="munu-table"></table>
+        </div>
     </div>
 </div>
 <!-- 操作列 -->
@@ -30,17 +35,17 @@
 <script src="/lib/layui-v2.5.5/layui.js" ></script>
 <script src="/js/lay-config.js" ></script>
 <script>
-    layui.use(['table', 'treetable','jquery'], function () {
+    layui.use(['table', 'treetable','jquery','form'], function () {
         var $ = layui.jquery;
-        var table = layui.table;
+        var table = layui.table,
+            form = layui.form;
         var treetable = layui.treetable;
-        alert("feifieifeifiefe");
         layer.load(2);
         treetable.render({
             treeColIndex: 1,
             treeSpid: -1,
-            treeIdName: 'authorityId',
-            treePidName: 'parentId',
+            treeIdName: 'id',
+            treePidName: 'parentid',
             elem: '#munu-table',
             url: '/auFunction/findAll.do',
             page: false,
@@ -52,10 +57,10 @@
                 {field: 'id', width: 80, align: 'center', title: '排序号'},
                 {
                     field: 'parentid', width: 80, align: 'center', templet: function (d) {
-                        if (d.isMenu == 1) {
+                        if (d.isstart == 1) {
                             return '<span class="layui-badge layui-bg-gray">按钮</span>';
                         }
-                        if (d.parentId == -1) {
+                        if (d.parentid == -1) {
                             return '<span class="layui-badge layui-bg-blue">目录</span>';
                         } else {
                             return '<span class="layui-badge-rim">菜单</span>';
@@ -69,12 +74,98 @@
             }
         });
 
-        $('#btn-expand').click(function () {
-            treetable.expandAll('#munu-table');
-        });
+        $(document).on("click","#btn-fold",function () {
+            layer.open({
+                type: 1
+                , title: "添加权限" //不显示标题栏
+                , closeBtn: false
+                , area: ['700px','600px']
+                , shade: 0.8
+                , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                , btn: ['确认添加', '取消']
+                , btnAlign: 'c'
+                , moveType: 1 //拖拽模式，0或者1
+                , content: '<from class="layui-form layuimini-form">' +
+                    '<from class="layui-form layuimini-form">\n' +
+                    '    <div class="layui-form-item">\n' +
+                    '    <label class="layui-form-label required">角色编号</label>\n' +
+                    '    <div class="layui-input-block">\n' +
+                    '        <input type="text" name="funccode" lay-verify="required" lay-reqtext="不能为空" placeholder="请输入角色编号" value="" class="layui-input">\n' +
+                    '    </div>\n' +
+                    '</div>\n' +
+                    '    <div class="layui-form-item">\n' +
+                    '        <label class="layui-form-label required">角色名称</label>\n' +
+                    '        <div class="layui-input-block">\n' +
+                    '            <input type="text" name="funcname" lay-verify="required" lay-reqtext="不能为空" placeholder="请输入角色名称" value="" class="layui-input">\n' +
+                    '        </div>\n' +
+                    '    </div>\n' +
+                    '    <div class="layui-form-item">\n' +
+                    '        <label class="layui-form-label required">FuncUrl</label>\n' +
+                    '        <div class="layui-input-block">\n' +
+                    '            <input type="text" name="funcurl" lay-verify="required" lay-reqtext="不能为空" placeholder="请输入角色名称" value="" class="layui-input">\n' +
+                    '        </div>\n' +
+                    '    </div>\n' +
+                    '<div class="layui-form-item">\n' +
+                    '                <label class="layui-form-label">父级</label>\n' +
+                    '                <div class="layui-input-block">\n' +
+                    '                    <select name="interest" class="select" lay-filter="aihao">\n' +
+                    '                        <option value="1" selected>系统管理</option>\n' +
+                    '                    </select>\n' +
+                    '                </div>\n' +
+                    '            </div></from>'
+                , success: function (layero) {
 
-        $('#btn-fold').click(function () {
-            treetable.foldAll('#munu-table');
+                    $.ajax({
+                        url:"/auFunction/findAll.do"
+                        ,dataType:"json"
+                        ,type:"get"
+                        ,success:function (rec) {
+                            var auFunctions=rec.data;
+                            for (let i in auFunctions) {
+                                var auFunction=auFunctions[i];
+                                $(".select").append("<option value=\""+auFunction.id+"\">"+auFunction.funcname+"</option>")
+                            }
+                            form.render('select');
+
+                        }
+                    });
+
+                },yes: function (index, layero) {
+                    var funccode = $("input[name=funccode]").val();
+                    var funcname = $("input[name=funcname]").val();
+                    var funcurl = $("input[name=funcurl]").val();
+                    var parentid = $("select[name=interest]").val();
+                    if (funccode == null || funccode == "") {
+                        layer.msg("角色编号不能为空")
+                    } else if (funcname == null || funcname == "") {
+                        layer.msg("角色名称不能为空")
+                    } else if (funcurl == null || funcurl == "") {
+                        layer.msg("权限路劲不能为空")
+                    } else {
+                        $.ajax({
+                            url: "/auFunction/add.do"
+                            , dataType: "json"
+                            , type: "get"
+                            , data: {"funccode": funccode, "funcname": funcname, "parentid": parentid,"funcurl":funcurl}
+                            , success: function (rec) {
+                                if (rec.code == 0) {
+                                    layer.msg("添加角色成功...");
+                                    setTimeout(function () {
+                                        location.href = "/html/backstage/author.html"
+                                    }, 2000)
+                                } else {
+                                    layer.msg("添加角色失败");
+                                    setTimeout(function () {
+                                        location.href = "/html/backstage/author.html"
+                                    }, 2000)
+                                }
+                            }
+
+                        })
+
+                    }
+                }
+            })
         });
 
         //监听工具条
@@ -82,10 +173,118 @@
             var data = obj.data;
             var layEvent = obj.event;
 
-            if (layEvent === 'del') {
-                layer.msg('删除' + data.id);
-            } else if (layEvent === 'edit') {
-                layer.msg('修改' + data.id);
+            if (layEvent === 'edit') {
+                layer.open({
+                    type: 1
+                    , title: "角色修改" //不显示标题栏
+                    , closeBtn: false
+                    , area: ['800px','700px']
+                    , shade: 0.8
+                    , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                    , btn: ['确认修改', '取消']
+                    , btnAlign: 'c'
+                    , moveType: 1 //拖拽模式，0或者1
+                    , content: '<from class="layui-form layuimini-form">\n' +
+                        '    <div class="layui-form-item">\n' +
+                        '    <label class="layui-form-label required">权限名称</label>\n' +
+                        '    <div class="layui-input-block">\n' +
+                        '        <input type="text" name="funcname" lay-verify="required" lay-reqtext="不能为空" placeholder="请输入角色编号" value="" class="layui-input">\n' +
+                        '    </div>\n' +
+                        '</div>\n' +
+                        '    <div class="layui-form-item">\n' +
+                        '        <label class="layui-form-label required">权限标识</label>\n' +
+                        '        <div class="layui-input-block">\n' +
+                        '            <input type="text" name="funccode" lay-verify="required" lay-reqtext="不能为空" placeholder="请输入角色名称" value="" class="layui-input">\n' +
+                        '        </div>\n' +
+                        '    </div>\n' + '    <div class="layui-form-item">\n' +
+                        '        <label class="layui-form-label required">菜单URL</label>\n' +
+                        '        <div class="layui-input-block">\n' +
+                        '            <input type="text" name="funcurl" lay-verify="required" lay-reqtext="不能为空" placeholder="请输入角色名称" value="" class="layui-input">\n' +
+                        '        </div>\n' +
+                        '    </div>\n' +
+                        '</from>'
+                    , success: function (layero) {
+                        $("input[name=funcname]").val(data.funcname);
+                        $("input[name=funccode]").val(data.funccode);
+                        $("input[name=funcurl]").val(data.funcurl);
+
+                    },yes: function (index, layero) {
+                        var funcname = $("input[name=funcname]").val();
+                        var funccode = $("input[name=funccode]").val();
+                        var funcurl = $("input[name=funcurl]").val();
+                        if (funcname == null || funcname == "") {
+                            layer.msg("角色编号不能为空")
+                        } else if (funccode == null || funccode == "") {
+                            layer.msg("角色名称不能为空")
+                        } else if (funcurl == null || funcurl == "") {
+                            layer.msg("状态没有选择")
+                        } else {
+                            $.ajax({
+                                url: "/auFunction/add.do"
+                                , dataType: "json"
+                                , type: "get"
+                                , data: {"funcname": funcname, "funccode": funccode, "funcurl": funcurl, "id": data.id,"parentid":data.parentid}
+                                , success: function (rec) {
+                                    if (rec.code == 0) {
+                                        layer.msg("修改角色成功...");
+                                        setTimeout(function () {
+                                            location.href = "/html/backstage/author.html"
+                                        }, 2000)
+                                    } else {
+                                        layer.msg("修改角色失败");
+                                        setTimeout(function () {
+                                            location.href = "/html/backstage/author.html"
+                                        }, 2000)
+                                    }
+                                }
+
+                            })
+
+                        }
+                    }
+                })
+            } else if (layEvent === 'del') {
+                $.ajax({
+                    url:"/auAuthority/findByFunctionId.do"
+                    ,dataType:"json"
+                    ,type:"get"
+                    ,data:{"fid":data.id}
+                    ,success:function (rec) {
+                        if (rec.code==1){
+
+                            layer.confirm('确认删除吗？', {
+                                btn: ['确认', '取消'] //可以无限个按钮
+                            }, function(index, layero){
+                                $.ajax({
+                                    url:"/auFunction/remove.do"
+                                    ,dataType:"json"
+                                    ,type:"get"
+                                    ,data:{"id":data.id}
+                                    ,success:function (rec) {
+                                        if (rec.code==0){
+                                            layer.msg("删除权限成功");
+                                            setTimeout(function () {
+                                                location.href="/html/backstage/author.html"
+                                            },2000)
+                                        } else {
+                                            layer.msg("删除权限失败");
+                                            setTimeout(function () {
+                                                location.href="/html/backstage/author.html"
+                                            },2000)
+                                        }
+                                    }
+                                })
+                            }, function(index){
+
+                            });
+
+                        } else {
+                            layer.msg("该权限被使用，不能删除....")
+                        }
+
+                    }
+                })
+
             }
         });
     });

@@ -38,8 +38,6 @@
             form = layui.form,
             table = layui.table;
 
-
-
         table.render({
             elem: '#currentTableId',
             url: '/auRole/findAll.do',
@@ -83,7 +81,7 @@
                     , btn: ['添加', '取消']
                     , btnAlign: 'c'
                     , moveType: 1 //拖拽模式，0或者1
-                    , content: '<from class="layui-form layuimini-form">' +
+                    , content:
                         '<from class="layui-form layuimini-form">\n' +
                         '    <div class="layui-form-item">\n' +
                         '    <label class="layui-form-label required">角色编号</label>\n' +
@@ -205,8 +203,7 @@
                     , btn: ['确认修改', '取消']
                     , btnAlign: 'c'
                     , moveType: 1 //拖拽模式，0或者1
-                    , content: '<from class="layui-form layuimini-form">' +
-                        '<from class="layui-form layuimini-form">\n' +
+                    , content: '<from class="layui-form layuimini-form">\n' +
                         '    <div class="layui-form-item">\n' +
                         '    <label class="layui-form-label required">角色编号</label>\n' +
                         '    <div class="layui-input-block">\n' +
@@ -235,9 +232,47 @@
                         $("input[name=use]").each(function () {
                             if ($(this).val()==isstart){
                                 alert($(this).val()+isstart);
-                                $(this).prop("checked",'true')
+                                $(this).prop("checked",'true');
+                                form.render();
                             }
                         })
+                    },yes: function (index, layero) {
+                        var rolecode = $("input[name=rolecode]").val();
+                        var rolename = $("input[name=rolename]").val();
+                        var isstar = $("input[name=use]:checked").val();
+                        if (rolecode == null || rolecode == "") {
+                            layer.msg("角色编号不能为空")
+                        } else if (rolename == null || rolename == "") {
+                            layer.msg("角色名称不能为空")
+                        } else if (isstar == null || isstar == "") {
+                            layer.msg("状态没有选择")
+                        } else {
+                            var isstart = 1;
+                            if (isstar == "禁用") {
+                                isstart = 0;
+                            }
+                            $.ajax({
+                                url: "/auRole/add.do"
+                                , dataType: "json"
+                                , type: "get"
+                                , data: {"rolecode": rolecode, "rolename": rolename, "isstart": isstart, "id": data.id}
+                                , success: function (rec) {
+                                    if (rec.code == 0) {
+                                        layer.msg("修改角色成功...");
+                                        setTimeout(function () {
+                                            location.href = "/html/backstage/role.html"
+                                        }, 2000)
+                                    } else {
+                                        layer.msg("修改角色失败");
+                                        setTimeout(function () {
+                                            location.href = "/html/backstage/role.html"
+                                        }, 2000)
+                                    }
+                                }
+
+                            })
+
+                        }
                     }
                 })
             }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.io.Serializable;
 
@@ -16,20 +17,24 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "AU_AUTHORITY")
 public class AuAuthority implements Serializable {
     private static final long serialVersionUID = -95635068226100894L;
     /**
     * 主键ID
     */
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     /**
     * 角色ID
     */
-    private Long roleid;
+    private Integer roleid;
     /**
     * 功能ID
     */
-    private Long functionid;
+    private Integer functionid;
     /**
     * 创建时间
     */
@@ -40,44 +45,6 @@ public class AuAuthority implements Serializable {
     private String createdby;
 
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getRoleid() {
-        return roleid;
-    }
-
-    public void setRoleid(Long roleid) {
-        this.roleid = roleid;
-    }
-
-    public Long getFunctionid() {
-        return functionid;
-    }
-
-    public void setFunctionid(Long functionid) {
-        this.functionid = functionid;
-    }
-
-    public Date getCreationtime() {
-        return creationtime;
-    }
-
-    public void setCreationtime(Date creationtime) {
-        this.creationtime = creationtime;
-    }
-
-    public String getCreatedby() {
-        return createdby;
-    }
-
-    public void setCreatedby(String createdby) {
-        this.createdby = createdby;
-    }
 
 }

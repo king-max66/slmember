@@ -1,7 +1,7 @@
 package com.sy.yuanfei.service;
 
-import com.sy.yuanfei.mapper.AuFunctionMapper;
-import com.sy.yuanfei.model.AuFunction;
+import com.sy.yuanfei.mapper.DataDictionaryMapper;
+import com.sy.yuanfei.model.DataDictionary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -12,25 +12,24 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
-public class AuFunctionServiceImpl implements AuFunctionService {
+public class DataDictionaryServiceImpl implements DataDictionaryService {
 
     @Autowired
-    private AuFunctionMapper auFunctionMapper;
-
+    private DataDictionaryMapper dataDictionaryMapper;
     @Override
-    public List<AuFunction> findAll() throws Exception {
-        return auFunctionMapper.findAll();
+    public List<DataDictionary> findAll() throws Exception {
+        return dataDictionaryMapper.findAll();
     }
 
     @Override
     @Transactional(isolation = Isolation.DEFAULT,propagation = Propagation.REQUIRED)
-    public AuFunction saveAuFunction(AuFunction auFunction) throws Exception {
-        return auFunctionMapper.save(auFunction);
+    public DataDictionary save(DataDictionary dataDictionary) throws Exception {
+        return dataDictionaryMapper.save(dataDictionary);
     }
 
     @Override
     @Transactional(isolation = Isolation.DEFAULT,propagation = Propagation.REQUIRED)
     public void removeById(int id) throws Exception {
-        auFunctionMapper.deleteById(id);
+        dataDictionaryMapper.deleteById(id);
     }
 }
